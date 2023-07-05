@@ -9,12 +9,21 @@ import XcodeProjectPlugin
 protocol CommandContext {
   var pluginWorkDirectory: Path { get }
   func tool(named name: String) throws -> PluginContext.Tool
+  var rootDirectory: Path { get }
 }
 
 // MARK: - PluginContext + CommandContext
 
-extension PluginContext: CommandContext { }
+extension PluginContext: CommandContext {
+  var rootDirectory: Path {
+    package.directory
+  }
+}
 
 #if canImport(XcodeProjectPlugin)
-extension XcodePluginContext: CommandContext { }
+extension XcodePluginContext: CommandContext {
+  var rootDirectory: Path {
+    xcodeProject.directory
+  }
+}
 #endif

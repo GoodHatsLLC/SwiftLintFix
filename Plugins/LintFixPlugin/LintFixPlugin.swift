@@ -7,11 +7,9 @@ import XcodeProjectPlugin
 // MARK: - LintFixPlugin
 
 /// A Swift Package Manager `CommandPlugin` and `XcodeCommandPlugin` that executes
-/// `LintFixTool` to format source code in Swift package targets according
-/// to the Airbnb Swift Style Guide.
+/// `LintFixTool` to format source code in Swift package targets.
 @main
 struct LintFixPlugin {
-
   /// Calls the `LintFixTool` executable with the given arguments
   func performCommand(
     context: CommandContext,
@@ -30,12 +28,26 @@ struct LintFixPlugin {
       })
     }
 
+    var configFilePathArgs: [String] = []
+
+    let fm = FileManager()
+
+    let swiftLintPath = context.rootDirectory.appending([".swiftlint"])
+    let swiftFormatPath = context.rootDirectory.appending([".swiftformat"])
+
+    if fm.fileExists(atPath: swiftLintPath.string) {
+      configFilePathArgs.append(contentsOf: ["--swiftLintConfig", swiftLintPath.string])
+    }
+    if fm.fileExists(atPath: swiftFormatPath.string) {
+      configFilePathArgs.append(contentsOf: ["--swiftFormatConfig", swiftFormatPath.string])
+    }
+
     let launchPath = try context.tool(named: "LintFixTool").path.string
-    let arguments = inputPaths + [
+    let arguments = try inputPaths + [
       "--swift-format-path",
-      try context.tool(named: "swiftformat").path.string,
+      context.tool(named: "swiftformat").path.string,
       "--swift-lint-path",
-      try context.tool(named: "swiftlint").path.string,
+      context.tool(named: "swiftlint").path.string,
       // The process we spawn doesn't have read/write access to the default
       // cache file locations, so we pass in our own cache paths from
       // the plugin's work directory.
@@ -47,7 +59,7 @@ struct LintFixPlugin {
 
     if arguments.contains("--log") {
       // swiftlint:disable:next no_direct_standard_out_logs
-      print("[Plugin]", launchPath, arguments.joined(separator: " "))
+      print("[LintFixPlugin]", launchPath, arguments.joined(separator: " "))
     }
 
     let process = Process()
@@ -65,7 +77,6 @@ struct LintFixPlugin {
       throw CommandError.unknownError(exitCode: process.terminationStatus)
     }
   }
-
 }
 
 // MARK: CommandPlugin
@@ -134,12 +145,10 @@ extension LintFixPlugin: CommandPlugin {
     let rootSwiftFiles = packageDirectoryContents.filter { $0.pathExtension.hasSuffix("swift") }
     return (subdirectories + rootSwiftFiles).map(\.path)
   }
-
 }
 
 #if canImport(XcodeProjectPlugin)
 extension LintFixPlugin: XcodeCommandPlugin {
-
   func performCommand(context: XcodePluginContext, arguments: [String]) throws {
     var argumentExtractor = ArgumentExtractor(arguments)
 
@@ -160,7 +169,6 @@ extension LintFixPlugin: XcodeCommandPlugin {
       arguments: argumentExtractor.remainingArguments
     )
   }
-
 }
 #endif
 

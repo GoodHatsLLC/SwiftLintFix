@@ -20,6 +20,8 @@ let package = Package(
       ),
       dependencies: [
         "LintFixTool",
+        "SwiftFormat",
+        "SwiftLintBinary",
       ]
     ),
     .executableTarget(
