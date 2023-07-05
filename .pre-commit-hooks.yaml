@@ -1,0 +1,6 @@
+-   id: swift_lintfix
+    name: Swift LintFix
+    description: run swift lint, lint-fix, and format.
+    entry: /usr/bin/swift package plugin --allow-writing-to-package-directory lintfix
+    language: script
+    files: '.*\.swift$'
