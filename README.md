@@ -1,4 +1,4 @@
-# SwiftLintFix
+# 🧹 SwiftLintFix
 
 A [swiftlint](https://github.com/realm/swiftlint) + [swiftformat](https://github.com/nicklockwood/SwiftFormat) SPM plugin with [pre-commit](https://github.com/pre-commit/pre-commit) hooks.
 
