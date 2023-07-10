@@ -1,6 +1,6 @@
 # SwiftLintFix
 
-A [swiftlint](https://github.com/realm/swiftlint) + [swiftformat](https://github.com/nicklockwood/SwiftFormat) SPM plugin.
+A [swiftlint](https://github.com/realm/swiftlint) + [swiftformat](https://github.com/nicklockwood/SwiftFormat) SPM plugin with [pre-commit](https://github.com/pre-commit/pre-commit) hooks.
 
 ----
 
@@ -17,7 +17,7 @@ See the [conditional dependency setup](https://github.com/GoodHatsLLC/SwiftLintF
 swift package plugin lintfix
 ```
 
-### Add to [pre-commit](https://github.com/pre-commit/pre-commit) with:
+### Add to pre-commit with:
 ```yaml
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
