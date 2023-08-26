@@ -1,6 +1,11 @@
-When running [pre-commit](https://github.com/pre-commit/pre-commit), `lintfix` runs with the env var `LINT_FIX=1`.
+# Conditional `Package.swift` Dependencies
 
-This allows making a `Package.swift` file which only defines the `SwiftLintFix` dependency when the env var is defined.
+By default, if you import SwiftLintFix as a dependency in your library, your library's users
+will see SwiftLintFix as a transitive dependency. That can be undesirable since it's just
+dev tooling.
+
+You can structure your `Package.swift` file to avoid this by only depending on SwiftLintFix
+if an environment variable is set.
 
 ```swift
 let package = Package(
@@ -15,7 +20,7 @@ let package = Package(
   dependencies: [
     .package(
       url: "https://github.com/GoodHatsLLC/SwiftLintFix.git",
-      from: "0.1.5"
+      from: "0.1.8"
     ).contingent(on: Env.requiresSwiftLintFixPlugin)
   ].compactMap { $0 },
   targets: [
@@ -41,7 +46,9 @@ extension Product: ConditionalArtifact { }
 
 private enum Env {
   static let requiresSwiftLintFixPlugin: Bool = {
-    ProcessInfo.processInfo.environment["LINT_FIX"] == "1"
+    ProcessInfo.processInfo.environment["ENABLE_LINT_FIX"] == "1"
  }
 }
 ```
+
+This repo's [pre-commit hook](https://github.com/GoodHatsLLC/SwiftLintFix/blob/main/.pre-commit-hooks.yaml) is set up to pass `ENABLE_LINT_FIX=1` as an environment variable — so it will work directly with the configuration shown above.
