@@ -34,7 +34,7 @@ repos:
     -   id: swift_lintfix
 ```
 
-## Configure the swiftlint and swiftformat rules
+## Configure `swiftlint` and `swiftformat`
 `SwiftLintFix` runs a default rule set for [swiftlint](https://github.com/realm/swiftlint) 
 and [swiftformat](https://github.com/nicklockwood/SwiftFormat) unless it finds their configuration
 files at the root of your repo.
