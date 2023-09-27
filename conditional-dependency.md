@@ -10,7 +10,7 @@ if an environment variable is set.
 ```swift
 let package = Package(
   name: "MyPackage",
-  platforms: [.iOS("15.4")],
+  platforms: [.iOS("16")],
   products: [
     .library(
       name: "MyLibrary",
@@ -30,6 +30,8 @@ let package = Package(
   ]
 )
 
+// MARK: - Conditional Dependency Setup
+import Foundation
 private protocol ConditionalArtifact { }
 extension ConditionalArtifact {
   func contingent(on filter: Bool) -> Self? {
@@ -47,7 +49,7 @@ extension Product: ConditionalArtifact { }
 private enum Env {
   static let requiresSwiftLintFixPlugin: Bool = {
     ProcessInfo.processInfo.environment["ENABLE_LINT_FIX"] == "1"
- }
+ }()
 }
 ```
 
